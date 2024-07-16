@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { Box, Button } from "@mui/material";
 import Webcam from "react-webcam";
+import axios from "axios"
 import Tesseract from "tesseract.js";
 const Scanner = () => {
   const webcamRef = React.useRef(null);
   const [image, setImage] = useState(null);
   const [text, setText] = useState("");
   const [opencamera, setOpenCamera] = React.useState(false);
+  const [userinfo,setUserInfo]=React.useState("")
   const handleScanFunction = () => {
     const imageSrc = webcamRef.current.getScreenshot();
     if (imageSrc) {
@@ -15,17 +17,37 @@ const Scanner = () => {
     }
   };
   const processImage = async (imageSrc) => {
+   
     if (imageSrc) {
-      Tesseract.recognize(imageSrc, "eng", {
-        logger: (m) => console.log(m, "m"),
-      }).then(({ data: { text } }) => {
-        console.log("Recognized Text:", text);
-        const numbers = text.match(/\d+/g);
-        setText(numbers ? numbers.join(" ") : "No numbers found");
-        setOpenCamera(false);
-      });
+      try {
+        const result = await Tesseract.recognize(imageSrc, "eng", {
+          logger: (m) => console.log(m),
+          oem: 1,
+        });
+
+        if (result && result.data && result.data.text) {
+          
+          const numbers = result.data.text.match(/\d+/g);
+   
+          setText(numbers ? numbers.join(" ") : "No numbers found");
+        } else {
+          setText("No text found");
+        }
+      } catch (error) {
+     
+        setText("Error processing image");
+      }
+      setOpenCamera(false);
     }
   };
+  const fetchdata=async()=>{
+   // let data=await axios.get(`http://localhost:3000/ocrweb/${text}`)
+    //setUserInfo(data.data)
+  }
+React.useEffect(()=>{
+  fetchdata()
+
+},[text])
 
   return (
     <Box sx={{ border: "1px solid green", padding: 20 }}>
@@ -56,7 +78,8 @@ const Scanner = () => {
           </Button>
         </>
       )}
-      <h1>{text}</h1>
+      <img src={image} style={{width:"80px",height:"80px"}}/>
+      <h1>{userinfo}</h1>
     </Box>
   );
 };
