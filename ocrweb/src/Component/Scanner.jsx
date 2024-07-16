@@ -11,43 +11,49 @@ const Scanner = () => {
     const imageSrc = webcamRef.current.getScreenshot();
     if (imageSrc) {
       setImage(imageSrc);
-      processImage(imageSrc)
+      processImage(imageSrc);
     }
   };
   const processImage = async (imageSrc) => {
-    console.log(image, "Image");
-    if (image) {
-      const result = await Tesseract.recognize(image, "eng");
-      console.log("result", result);
-      setText(result.data.text);
-      setOpenCamera(!opencamera)
+    if (imageSrc) {
+      Tesseract.recognize(imageSrc, "eng", {
+        logger: (m) => console.log(m, "m"),
+      }).then(({ data: { text } }) => {
+        console.log("Recognized Text:", text);
+        const numbers = text.match(/\d+/g);
+        setText(numbers ? numbers.join(" ") : "No numbers found");
+        setOpenCamera(false);
+      });
     }
   };
 
   return (
     <Box sx={{ border: "1px solid green", padding: 20 }}>
       {!opencamera ? (
-        <Button onClick={() => setOpenCamera(!opencamera)}   variant="contained"
-        sx={{ width: "100%" }}>
+        <Button
+          onClick={() => setOpenCamera(!opencamera)}
+          variant="contained"
+          sx={{ width: "100%" }}
+        >
           {opencamera ? "Close Camera" : "Open Camera"}
         </Button>
       ) : (
         <>
-        <Webcam
-          audio={false}
-          ref={webcamRef}
-          screenshotFormat="image/jpeg"
-          width={320}
-          height={240}
-        />
-        
-      <Button
-        variant="contained"
-        sx={{ width: "100%" }}
-        onClick={handleScanFunction}
-      >
-        Capturing Image
-      </Button>
+          <Webcam
+            audio={false}
+            ref={webcamRef}
+            screenshotFormat="image/jpeg"
+            width={320}
+            height={240}
+          />
+
+          <Button
+            variant="contained"
+            sx={{ width: "100%" }}
+            onClick={handleScanFunction}
+          >
+            Capturing Image
+          </Button>
         </>
       )}
       <h1>{text}</h1>
