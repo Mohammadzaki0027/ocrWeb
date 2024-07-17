@@ -4,11 +4,9 @@ const Vehicle = require("../Schema/userInfoschema");
 const router = express.Router();
 
 router.post("/adduserInfo", async (req, res) => {
-
   try {
     const { vehicleNumber, driverName, VehicleRegNumber, country } = req.body;
 
- 
     const newVehicle = new Vehicle({
       vehicleNumber,
       driverName,

@@ -8,7 +8,7 @@ const Scanner = () => {
   const [image, setImage] = useState(null);
   const [text, setText] = useState("");
   const [opencamera, setOpenCamera] = React.useState(false);
-  const [userinfo, setUserInfo] = React.useState("");
+  const [userinfo, setUserInfo] = React.useState();
   const handleScanFunction = () => {
     const imageSrc = webcamRef.current.getScreenshot();
     if (imageSrc) {
@@ -38,8 +38,8 @@ const Scanner = () => {
     }
   };
   const fetchdata = async () => {
-    // let data=await axios.get(`http://localhost:3000/ocrweb/${text}`)
-    //setUserInfo(data.data)
+    //let data=await axios.get(`http://localhost:8080/getapi/ocrweb/${text}`)
+    setUserInfo(data.data)
   };
   React.useEffect(() => {
     fetchdata();
