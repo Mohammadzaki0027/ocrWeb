@@ -7,8 +7,8 @@ const userInfoRoute=require("./Routes/uerInfoRoutes")
 const port = process.env.PORT;
 const app = express();
 app.use(express.json());
-app.use("/", ocrRoute);
-app.use('/api', ocrRoute);
+
+app.use('/getapi', ocrRoute);
 app.use("/",userInfoRoute)
 
 app.listen(port, async () => {

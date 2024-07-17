@@ -4,11 +4,11 @@ const Vehicle = require("../Schema/userInfoschema");
 const router = express.Router();
 
 router.post("/adduserInfo", async (req, res) => {
-    console.log(req.body,"reqbody")
+
   try {
     const { vehicleNumber, driverName, VehicleRegNumber, country } = req.body;
 
-    // Create a new vehicle instance
+ 
     const newVehicle = new Vehicle({
       vehicleNumber,
       driverName,
