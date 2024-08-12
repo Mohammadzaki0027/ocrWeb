@@ -1,21 +1,38 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Box, Button } from "@mui/material";
 import Webcam from "react-webcam";
-import axios from "axios";
-import Tesseract from "tesseract.js";
+import Tesseract, { createWorker } from "tesseract.js";
+import ImageToText from "./ImageToText";
+
 const Scanner = () => {
-  const webcamRef = React.useRef(null);
+  const webcamRef = useRef(null);
   const [image, setImage] = useState(null);
   const [text, setText] = useState("");
-  const [opencamera, setOpenCamera] = React.useState(false);
-  const [userinfo, setUserInfo] = React.useState();
+  const [opencamera, setOpenCamera] = useState(false);
+  const [userinfo, setUserInfo] = useState();
+
+
+
+  const convertImageToText = async (image) => {
+    const { createWorker } = Tesseract;
+(async () => {
+  const worker = await createWorker('eng');
+  const { data: { text } } = await worker.recognize(image, {
+
+  });
+  console.log(text,"recttext");
+})();
+  };
+
   const handleScanFunction = () => {
     const imageSrc = webcamRef.current.getScreenshot();
     if (imageSrc) {
       setImage(imageSrc);
+      convertImageToText(imageSrc);
       processImage(imageSrc);
     }
   };
+
   const processImage = async (imageSrc) => {
     if (imageSrc) {
       try {
@@ -26,7 +43,7 @@ const Scanner = () => {
 
         if (result && result.data && result.data.text) {
           const numbers = result.data.text.match(/\d+/g);
-
+          console.log(result.data,"results")
           setText(numbers ? numbers.join(" ") : "No numbers found");
         } else {
           setText("No text found");
@@ -37,13 +54,17 @@ const Scanner = () => {
       setOpenCamera(false);
     }
   };
+
   const fetchdata = async () => {
-    //let data=await axios.get(`http://localhost:8080/getapi/ocrweb/${text}`)
-    setUserInfo(data.data)
+    // Uncomment and implement the fetch logic as needed
+    // let data = await axios.get(`http://localhost:8080/getapi/ocrweb/${text}`)
+    // setUserInfo(data.data)
+    // console.log("Text", text)
   };
-  React.useEffect(() => {
+
+  useEffect(() => {
     fetchdata();
-  }, [text]);
+  }, [image]);
 
   return (
     <Box sx={{ border: "1px solid green", padding: 20 }}>
@@ -70,12 +91,15 @@ const Scanner = () => {
             sx={{ width: "100%" }}
             onClick={handleScanFunction}
           >
-            Capturing Image
+            Capture Image
           </Button>
         </>
       )}
-      <img src={image} style={{ width: "80px", height: "80px" }} />
+      {image && <img src={image} alt="Captured" style={{ width: "80px", height: "80px", marginTop: "40px" }} />}
       <h1>{userinfo}</h1>
+      <p>{text}</p>
+<br/>
+<ImageToText/>
     </Box>
   );
 };

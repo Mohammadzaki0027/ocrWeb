@@ -5,13 +5,20 @@ const router = express.Router();
 
 router.post("/adduserInfo", async (req, res) => {
   try {
-    const { vehicleNumber, driverName, VehicleRegNumber, country } = req.body;
+    const {
+      vehicleNumber,
+      driverName,
+      VehicleRegNumber,
+      country,
+      RenewalDate,
+    } = req.body;
 
     const newVehicle = new Vehicle({
       vehicleNumber,
       driverName,
       VehicleRegNumber,
       country,
+      RenewalDate,
     });
 
     await newVehicle.save();

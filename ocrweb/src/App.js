@@ -1,5 +1,8 @@
 import "./App.css";
 import { Box } from "@mui/material";
+
+
+import ImageToText from "./Component/ImageToText";
 import Scanner from "./Component/Scanner";
 function App() {
   return (
@@ -13,7 +16,9 @@ function App() {
       }}
     >
       
-      <Scanner />
+   <Scanner />
+   {/* <GoogleVisionApi/> */}
+   {/* <ImageToText/> */}
     </Box>
   );
 }

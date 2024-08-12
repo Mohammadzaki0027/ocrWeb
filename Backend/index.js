@@ -6,6 +6,8 @@ const ocrRoute =require("./Routes/ocrRoutes")
 const userInfoRoute=require("./Routes/uerInfoRoutes")
 const port = process.env.PORT;
 const app = express();
+const cors = require('cors');
+app.use(cors());
 app.use(express.json());
 
 app.use('/getapi', ocrRoute);

@@ -10,6 +10,8 @@ const vehicleSchema = new mongoose.Schema({
   driverName: String,
   VehicleRegNumber: String,
   country: String,
+  RenewalDate:String,
+
 });
 
 const Vehicle = mongoose.model("Vehicle", vehicleSchema);
